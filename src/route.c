@@ -1,8 +1,9 @@
 #include "server.h"
 
-void route(Server* server, char* method, char* path, void (*handler)(Request*, Response*))
+void route(Server *server, char *method, char *path, void (*handler)(Request *, Response *))
 {
-  if (server->route_count == MAX_ROUTE_COUNT) {
+  if (server->route_count == MAX_ROUTE_COUNT)
+  {
     printf("Failed to add route: %s\n", path);
     printf("Max route count reached\n");
     exit(EXIT_FAILURE);

@@ -2,14 +2,17 @@
 #include <stdlib.h>
 #include "request.h"
 
-int parse_request(const char *request, Request *http_request) {
+int parse_request(const char *request, Request *http_request)
+{
     char *request_copy = strdup(request);
-    if (request_copy == NULL) return -1;
+    if (request_copy == NULL)
+        return -1;
 
     char *line, *saveptr;
 
     line = strtok_r(request_copy, "\r\n", &saveptr);
-    if (line == NULL) {
+    if (line == NULL)
+    {
         free(request_copy);
         return -1;
     }
@@ -19,11 +22,14 @@ int parse_request(const char *request, Request *http_request) {
     http_request->headers[0] = '\0';
     http_request->content_length = 0;
 
-  // TODO: headers contains the body of the request as well. Fix this.
-    while ((line = strtok_r(NULL, "\r\n", &saveptr)) != NULL) {
-        if (strlen(line) == 0) break;
+    // TODO: headers contains the body of the request as well. Fix this.
+    while ((line = strtok_r(NULL, "\r\n", &saveptr)) != NULL)
+    {
+        if (strlen(line) == 0)
+            break;
 
-        if (strncmp(line, "Content-Length:", 15) == 0) {
+        if (strncmp(line, "Content-Length:", 15) == 0)
+        {
             sscanf(line, "Content-Length: %d", &http_request->content_length);
         }
 
@@ -32,18 +38,21 @@ int parse_request(const char *request, Request *http_request) {
     }
 
     char *body_start = strstr(request, "\r\n\r\n");
-    if (body_start != NULL) {
+    if (body_start != NULL)
+    {
         body_start += 4;
 
-        if (http_request->content_length > 0) {
+        if (http_request->content_length > 0)
+        {
             strncpy(http_request->body, body_start, http_request->content_length);
             http_request->body[http_request->content_length] = '\0'; // Ensure null termination
         }
-    } else {
+    }
+    else
+    {
         http_request->body[0] = '\0';
     }
 
     free(request_copy);
     return 0;
 }
-
