@@ -33,5 +33,6 @@ int parse_request(const char *request, Request *http_request);
 int compare_route(char *url, char *path);
 void parse_request_params(Request *req, char *path);
 void free_request_params(Request *req);
+char *get_param(Request *req, char *key);
 
 #endif

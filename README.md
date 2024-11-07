@@ -41,7 +41,7 @@ This project is a simple HTTP web server implemented in C, designed to handle HT
 - [x] Customizable status messages
 - [x] Configurable port and IP binding
 - [x] Logger
-- [ ] Dynamic routing -> /hello/:id
+- [x] Dynamic routing -> /hello/:id
 - [ ] Middlewares
 - [ ] Query parameters
 - [ ] Response utilities like JSON(), html() and text()
@@ -69,12 +69,30 @@ void say_hi(Request* req, Response* res)
   res->body = "<html><h1>Hi Route</h1></html>";
 }
 
+void say_hi_with_params(Request *req, Response *res)
+{
+  char *id = get_param(req, "id");
+  char *name = get_param(req, "name");
+  char *age = get_param(req, "age");
+  char *not_found = get_param(req, "NOTFOUND");
+
+  printf("id: %s\n", id);
+  printf("name: %s\n", name);
+  printf("age: %s\n", age);
+  printf("not_found: %s\n", not_found);
+
+  res->status_code = 200;
+  res->content_type = "text/json";
+  res->body = "{\"JSON?\": \"Kinda JSON\"}";
+}
+
 int main()
 {
   Server* tut = create_server();
 
   route(tut, "GET", "/hello", say_hello);
   route(tut, "POST", "/hi", say_hi);
+  route(tut, "GET", "/hi/:id/hello/:name/:age/hola", say_hi_with_params);
 
   tlisten(tut, 4000);
 

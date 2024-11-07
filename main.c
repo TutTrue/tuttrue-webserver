@@ -29,44 +29,26 @@ void say_hello(Request *req, Response *res)
 
 void say_hi(Request *req, Response *res)
 {
-  res->status_code = 200;
+  res->status_code = 201;
   res->content_type = "text/html";
   res->body = "<html><h1>Hi Route</h1></html>";
 }
 
-void say_hi1(Request *req, Response *res)
+void say_hi_with_params(Request *req, Response *res)
 {
-  res->status_code = 200;
-  res->content_type = "text/plain";
-  res->body = "1";
-}
+  char *id = get_param(req, "id");
+  char *name = get_param(req, "name");
+  char *age = get_param(req, "age");
+  char *not_found = get_param(req, "NOTFOUND");
 
-void say_hi2(Request *req, Response *res)
-{
-  res->status_code = 200;
-  res->content_type = "text/plain";
-  res->body = "2";
-}
+  printf("id: %s\n", id);
+  printf("name: %s\n", name);
+  printf("age: %s\n", age);
+  printf("not_found: %s\n", not_found);
 
-void say_hi3(Request *req, Response *res)
-{
   res->status_code = 200;
-  res->content_type = "text/plain";
-  res->body = "3";
-}
-
-void say_hi4(Request *req, Response *res)
-{
-  res->status_code = 200;
-  res->content_type = "text/plain";
-  res->body = "4";
-}
-
-void say_hi5(Request *req, Response *res)
-{
-  res->status_code = 200;
-  res->content_type = "text/plain";
-  res->body = "5";
+  res->content_type = "text/json";
+  res->body = "{\"JSON?\": \"Kinda JSON\"}";
 }
 
 int main()
@@ -75,11 +57,7 @@ int main()
 
   route(tut, "GET", "/hello", say_hello);
   route(tut, "POST", "/hi", say_hi);
-  route(tut, "GET", "/hi/:id", say_hi1);
-  route(tut, "GET", "/hi/:id/hi", say_hi2);
-  route(tut, "GET", "/hi/:id/hi/:name", say_hi3);
-  route(tut, "GET", "/hi/:id/hi/:name/:age", say_hi4);
-  route(tut, "GET", "/hi/:id/hi/:name/:age/hello", say_hi5);
+  route(tut, "GET", "/hi/:id/hi/:name/:age/hello", say_hi_with_params);
 
   tlisten(tut, 4000);
 

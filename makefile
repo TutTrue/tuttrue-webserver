@@ -10,7 +10,7 @@ LIB_DIR = lib
 
 # Library and source files
 LIBRARY = $(LIB_DIR)/libTutTrueWebServer.a
-OBJ_FILES = $(OBJ_DIR)/create_server.o $(OBJ_DIR)/handle_request.o $(OBJ_DIR)/parse_request.o $(OBJ_DIR)/route.o $(OBJ_DIR)/tlisten.o $(OBJ_DIR)/get_status_text.o $(OBJ_DIR)/compare_route.o $(OBJ_DIR)/create_response.o
+OBJ_FILES = $(OBJ_DIR)/create_server.o $(OBJ_DIR)/handle_request.o $(OBJ_DIR)/parse_request.o $(OBJ_DIR)/route.o $(OBJ_DIR)/tlisten.o $(OBJ_DIR)/get_status_text.o $(OBJ_DIR)/compare_route.o $(OBJ_DIR)/create_response.o $(OBJ_DIR)/params.o
 MAIN_SRC = main.c
 MAIN_OBJ = $(OBJ_DIR)/main.o
 
