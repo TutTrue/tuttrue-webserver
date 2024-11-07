@@ -9,9 +9,7 @@ void tlisten(Server *s, int port)
 	ssize_t valread;
 	char buffer[1024] = {0};
 
-	if (setsockopt(s->fd, SOL_SOCKET,
-				   SO_REUSEADDR | SO_REUSEPORT, &opt,
-				   sizeof(opt)))
+	if (setsockopt(s->fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
 	{
 		perror("setsockopt");
 		exit(EXIT_FAILURE);
@@ -20,8 +18,7 @@ void tlisten(Server *s, int port)
 	address.sin_addr.s_addr = INADDR_ANY;
 	address.sin_port = htons(port);
 
-	if (bind(s->fd, (struct sockaddr *)&address,
-			 sizeof(address)) < 0)
+	if (bind(s->fd, (struct sockaddr *)&address, sizeof(address)) < 0)
 	{
 		perror("bind failed");
 		exit(EXIT_FAILURE);
@@ -34,8 +31,7 @@ void tlisten(Server *s, int port)
 	while (1)
 	{
 
-		if ((new_socket = accept(s->fd, (struct sockaddr *)&address,
-								 &addrlen)) < 0)
+		if ((new_socket = accept(s->fd, (struct sockaddr *)&address, &addrlen)) < 0)
 		{
 			perror("accept");
 			exit(EXIT_FAILURE);

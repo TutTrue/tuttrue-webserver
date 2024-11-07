@@ -87,5 +87,6 @@ typedef struct
 } Response;
 
 const char *get_status_text(HttpStatusCode code);
+void create_response(char *buffer, Response *res);
 
 #endif

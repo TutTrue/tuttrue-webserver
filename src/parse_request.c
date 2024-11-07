@@ -56,3 +56,65 @@ int parse_request(const char *request, Request *http_request)
     free(request_copy);
     return 0;
 }
+
+void parse_request_params(Request *req, char *path)
+{
+    int i = 0, j = 0, param_idx = 0;
+
+    while (path[i] != '\0' && req->url[j] != '\0')
+    {
+        if (path[i] == ':')
+        {
+            if (param_idx == MAX_PARAMS_SIZE - 1)
+                break;
+            int key_start = i + 1;
+
+            while (path[i] != '/' && path[i] != '\0')
+                i++;
+
+            int key_len = i - key_start;
+            req->params[param_idx].key = (char *)malloc(key_len + 1);
+            if (!req->params[param_idx].key)
+            {
+                printf("Failed to allocate params key\n");
+                return;
+            }
+            strncpy(req->params[param_idx].key, &path[key_start], key_len);
+            req->params[param_idx].key[key_len] = '\0';
+
+            int value_start = j;
+            while (req->url[j] != '/' && req->url[j] != '\0')
+                j++;
+
+            int value_len = j - value_start;
+            req->params[param_idx].value = (char *)malloc(value_len + 1);
+            if (!req->params[param_idx].value)
+            {
+                printf("Failed to allocate params value\n");
+                return;
+            }
+            strncpy(req->params[param_idx].value, &req->url[value_start], value_len);
+            req->params[param_idx].value[value_len] = '\0';
+
+            param_idx++;
+        }
+        else
+        {
+            i++;
+            j++;
+        }
+    }
+    req->params[param_idx].key = NULL;
+    req->params[param_idx].value = NULL;
+}
+
+void free_request_params(Request *req)
+{
+    int v = 0;
+    while (req->params[v].key != NULL)
+    {
+        free(req->params[v].key);
+        free(req->params[v].value);
+        v += 1;
+    }
+}
