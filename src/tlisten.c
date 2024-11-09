@@ -36,8 +36,7 @@ void tlisten(Server *s, int port)
 			perror("accept");
 			exit(EXIT_FAILURE);
 		}
-		valread = read(new_socket, buffer,
-					   1024 - 1);
+		valread = read(new_socket, buffer, 1024 - 1);
 		if (valread < 0)
 		{
 			perror("read");

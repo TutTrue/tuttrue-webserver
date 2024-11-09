@@ -28,7 +28,7 @@ void handle_request(Server *server, char *buffer, int new_socket)
     if (strcmp(req.method, server->routes[i].method) == 0 && compare_route(req.url, server->routes[i].path) == 0)
     {
       parse_request_params(&req, server->routes[i].path);
-      server->routes[i].handler(&req, &res);
+      excute(server->routes[i].handlers, &req, &res);
       free_request_params(&req);
       create_response(b, &res);
       found_route = 1;
