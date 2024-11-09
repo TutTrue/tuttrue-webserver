@@ -16,9 +16,13 @@ This project is a simple HTTP web server implemented in C, designed to handle HT
 ├── makefile
 ├── README.md
 └── src
+    ├── compare_route.c
+    ├── create_response.c
     ├── create_server.c
+    ├── excute.c
     ├── get_status_text.c
     ├── handle_request.c
+    ├── params.c
     ├── parse_request.c
     ├── route.c
     └── tlisten.c
@@ -42,7 +46,7 @@ This project is a simple HTTP web server implemented in C, designed to handle HT
 - [x] Configurable port and IP binding
 - [x] Logger
 - [x] Dynamic routing -> /hello/:id
-- [ ] Middlewares
+- [x] Middlewares
 - [ ] Query parameters
 - [ ] Response utilities like JSON(), html() and text()
 - [ ] Multi-threading for concurrent request handling
@@ -104,6 +108,7 @@ int main()
 
 - **`create_server()`**: Initializes a new server instance.
 - **`route(Server* server, const char* method, const char* path, void (*handler)(Request*, Response*))`**: Defines a route for the server. Parameters:
+
   - **`server`**: Pointer to the server instance.
   - **`method`**: HTTP method (e.g., "GET", "POST").
   - **`path`**: Endpoint path (e.g., "/hello").
@@ -118,15 +123,16 @@ int main()
     - **`content_type`**: MIME type of the response (e.g., `"text/html"`).
     - **`body`**: The HTML content or response body sent to the client.
 
-
 ## Getting Started
 
 1. **Build the Project**:
+
    ```sh
    make
    ```
 
 2. **Send a request**:
+
    ```sh
    curl -X POST localhost:4000/hi \
      -H "Content-Type: application/json" \
