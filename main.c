@@ -4,16 +4,12 @@
 
 void say_hello(Request *req, Response *res)
 {
-  res->status_code = 201;
-  res->content_type = "text/html";
-  res->body = "<html><h1>Hello Route</h1></html>";
+  return html(res, HTTP_CREATED, "<html><h1>Hello Route</h1></html>");
 }
 
 void say_hi(Request *req, Response *res)
 {
-  res->status_code = 201;
-  res->content_type = "text/html";
-  res->body = "<html><h1>Hi Route</h1></html>";
+  return json(res, HTTP_OK, "{\"Hi?\": \"Hi\"}");
 }
 
 void say_hi_with_params(Request *req, Response *res)
@@ -28,9 +24,7 @@ void say_hi_with_params(Request *req, Response *res)
   printf("age: %s\n", age);
   printf("not_found: %s\n", not_found);
 
-  res->status_code = 201;
-  res->content_type = "text/json";
-  res->body = "{\"JSON?\": \"Kinda JSON\"}";
+  return json(res, HTTP_CREATED, "{\"JSON?\": \"Kinda JSON\"}");
 }
 void one(Request *req, Response *res, Next next)
 {
@@ -49,17 +43,13 @@ void three(Request *req, Response *res, Next next)
   }
   else
   {
-    res->status_code = 201;
-    res->content_type = "text/html";
-    res->body = "<html><h1>X is One function four will not excute</h1></html>";
+    return text(res, HTTP_OK, "X is One function four will not excute");
   }
 }
 void four(Request *req, Response *res)
 {
   printf("four Route\n");
-  res->status_code = 201;
-  res->content_type = "text/html";
-  res->body = "<html><h1>Four Route</h1></html>";
+  return text(res, HTTP_OK, "Four Route");
 }
 
 int main()

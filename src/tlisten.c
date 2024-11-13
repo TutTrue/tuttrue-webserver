@@ -1,4 +1,12 @@
 #include "server.h"
+#include <signal.h>
+
+volatile sig_atomic_t stop_server = 0;
+
+void handle_sigint(int sig)
+{
+	stop_server = 1;
+}
 
 void tlisten(Server *s, int port)
 {
@@ -8,6 +16,8 @@ void tlisten(Server *s, int port)
 	int new_socket;
 	ssize_t valread;
 	char buffer[1024] = {0};
+
+	// signal(SIGINT, handle_sigint);
 
 	if (setsockopt(s->fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
 	{
@@ -30,23 +40,30 @@ void tlisten(Server *s, int port)
 	}
 	while (1)
 	{
-
 		if ((new_socket = accept(s->fd, (struct sockaddr *)&address, &addrlen)) < 0)
 		{
-			perror("accept");
-			exit(EXIT_FAILURE);
+			perror("read");
+			continue;
 		}
 		valread = read(new_socket, buffer, 1024 - 1);
+		if (valread == 0)
+		{
+			close(new_socket);
+			continue;
+		}
 		if (valread < 0)
 		{
 			perror("read");
-			exit(EXIT_FAILURE);
+			continue;
 		}
-
+		buffer[valread] = '\0';
 		handle_request(s, buffer, new_socket);
 		close(new_socket);
 	}
 
+	printf("Server is shutting down...\n");
+
 	close(s->fd);
-	free(s);
+	free_server(s);
+	exit(0);
 }

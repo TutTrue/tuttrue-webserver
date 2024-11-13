@@ -43,5 +43,6 @@ void tlisten(Server *s, int port);
 void route_d(Server *server, char *method, char *path, ...);
 void handle_request(Server *server, char *buffer, int new_socket);
 void excute(handler_list_t *handlers, Request *req, Response *res);
+void free_server(Server *s);
 
 #endif

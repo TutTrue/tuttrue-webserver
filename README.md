@@ -48,7 +48,7 @@ This project is a simple HTTP web server implemented in C, designed to handle HT
 - [x] Dynamic routing -> /hello/:id
 - [x] Middlewares
 - [ ] Query parameters
-- [ ] Response utilities like JSON(), html() and text()
+- [x] Response utilities like JSON(), html() and text()
 - [ ] Multi-threading for concurrent request handling
 - [ ] SSL/TLS support
 

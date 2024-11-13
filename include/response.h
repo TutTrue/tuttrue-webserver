@@ -89,4 +89,8 @@ typedef struct
 const char *get_status_text(HttpStatusCode code);
 void create_response(char *buffer, Response *res);
 
+void json(Response *res, HttpStatusCode code, char *body);
+void html(Response *res, HttpStatusCode code, char *body);
+void text(Response *res, HttpStatusCode code, char *body);
+
 #endif
