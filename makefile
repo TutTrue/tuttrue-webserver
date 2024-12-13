@@ -1,3 +1,4 @@
+# Compiler and flags
 CC = gcc
 CFLAGS = -Wall -g -I$(INCLUDE_DIR)
 
@@ -7,39 +8,56 @@ INCLUDE_DIR = include
 OBJ_DIR = build
 BIN_DIR = bin
 LIB_DIR = lib
+UTILS_DIR = $(SRC_DIR)/utils
 
-# Library and source files
+# Library and binary
 LIBRARY = $(LIB_DIR)/libTutTrueWebServer.a
-OBJ_FILES = $(OBJ_DIR)/create_server.o $(OBJ_DIR)/handle_request.o $(OBJ_DIR)/parse_request.o $(OBJ_DIR)/route.o $(OBJ_DIR)/tlisten.o $(OBJ_DIR)/get_status_text.o $(OBJ_DIR)/compare_route.o $(OBJ_DIR)/create_response.o $(OBJ_DIR)/params.o $(OBJ_DIR)/excute.o $(OBJ_DIR)/free_server.o $(OBJ_DIR)/response_utils.o
+TARGET = $(BIN_DIR)/main
+
+# Source and object files
+SRC_FILES = $(wildcard $(SRC_DIR)/*.c) $(wildcard $(UTILS_DIR)/*.c)
+OBJ_FILES = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC_FILES:$(UTILS_DIR)/%.c=$(OBJ_DIR)/%.o))
 MAIN_SRC = main.c
 MAIN_OBJ = $(OBJ_DIR)/main.o
 
-# Default target to build the library and the main program
-all: $(LIBRARY) $(BIN_DIR)/main
-	  @$(BIN_DIR)/main
+# Default target
+all: $(LIBRARY) $(TARGET)
+	@echo "Build complete. Running program:"
+	@$(TARGET)
 
-# Build the static library
+# Build static library
 $(LIBRARY): $(OBJ_FILES)
+	@mkdir -p $(LIB_DIR)
 	ar rcs $@ $^
+	@echo "Static library created: $@"
 
 # Compile source files into object files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
+	@echo "Compiled: $<"
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/utils/%.c
+$(OBJ_DIR)/%.o: $(UTILS_DIR)/%.c
+	@mkdir -p $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
+	@echo "Compiled: $<"
 
 # Compile main.c to object file
 $(MAIN_OBJ): $(MAIN_SRC)
-	$(CC) $(CFLAGS) -c $(MAIN_SRC) -o $(MAIN_OBJ)
+	@mkdir -p $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+	@echo "Compiled: $<"
 
 # Link the main program with the static library
-$(BIN_DIR)/main: $(MAIN_OBJ) $(LIBRARY)
-	$(CC) $(CFLAGS) $(MAIN_OBJ) -L$(LIB_DIR) -lTutTrueWebServer -o $(BIN_DIR)/main
+$(TARGET): $(MAIN_OBJ) $(LIBRARY)
+	@mkdir -p $(BIN_DIR)
+	$(CC) $(CFLAGS) $< -L$(LIB_DIR) -lTutTrueWebServer -o $@
+	@echo "Executable created: $@"
 
-# Clean the build and binary files
+# Clean build artifacts and binaries
 clean:
-	rm -rf $(OBJ_DIR)/*.o $(LIBRARY) $(BIN_DIR)/main
+	@rm -rf $(OBJ_DIR)/*.o $(LIBRARY) $(TARGET)
+	@echo "Cleaned build artifacts and binaries."
 
+# Phony targets
 .PHONY: all clean
-
